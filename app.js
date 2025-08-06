@@ -1,594 +1,921 @@
-// Enhanced Photo data from provided JSON
-const photosData = {
-  "photos": [
-    {
-      "id": 1,
-      "title": "The Confused Cat",
-      "message": "This little guy seems to be questioning all of life's mysteries while sitting in a tiny box that's clearly too small for his philosophical thoughts.",
-      "image": "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=400&fit=crop"
-    },
-    {
-      "id": 2,
-      "title": "Floating Pizza",
-      "message": "Someone clearly forgot the laws of physics when they took this perfectly timed shot! This pizza has mastered the ancient art of levitation.",
-      "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop"
-    },
-    {
-      "id": 3,
-      "title": "The Thinking Llama",
-      "message": "This llama appears to be contemplating the meaning of existence... or maybe just wondering where all the good hay went. Deep thoughts from our fluffy friend.",
-      "image": "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=600&h=400&fit=crop"
-    },
-    {
-      "id": 4,
-      "title": "Upside Down World",
-      "message": "Everything is topsy-turvy in this mind-bending optical illusion that'll make you question which way is up! Reality is clearly overrated.",
-      "image": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop"
-    },
-    {
-      "id": 5,
-      "title": "The Dancing Cactus",
-      "message": "Who knew cacti could have such rhythm? This spiky friend is showing off some serious moves that would make professional dancers jealous.",
-      "image": "https://images.unsplash.com/photo-1509937528035-ad76254b0356?w=600&h=400&fit=crop"
-    },
-    {
-      "id": 6,
-      "title": "Gravity-Defying Coffee",
-      "message": "This coffee cup has clearly mastered the art of levitation. Science teachers hate this one weird trick that defies all known laws of physics!",
-      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop"
-    },
-    {
-      "id": 7,
-      "title": "The Judgemental Owl",
-      "message": "This owl is giving you the ultimate stink eye and silently judging all your questionable life choices. Those eyes see straight into your soul.",
-      "image": "https://images.unsplash.com/photo-1539628399213-d6aa2acb2104?w=600&h=400&fit=crop"
-    },
-    {
-      "id": 8,
-      "title": "Miniature Giant",
-      "message": "Perspective is everything! This 'giant' person is actually just really good at forced perspective photography. Size really doesn't matter when you have creativity!",
-      "image": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop"
+// Starlit Night Surprise - App Logic (Fixed Version)
+class StarlitApp {
+    constructor() {
+        this.currentPhoto = 0;
+        this.photos = [
+            {
+                id: 1,
+                title: "Starlit Mountain Peak",
+                description: "Where dreams touch the sky under countless stars, a moment of pure magic captured forever",
+                date: "August 1, 2024",
+                dominantColor: "#0D1B2A"
+            },
+            {
+                id: 2,
+                title: "Moonlit Ocean Waves",
+                description: "Gentle waves reflecting moonbeams, each ripple carrying wishes to distant shores",
+                date: "August 2, 2024",
+                dominantColor: "#2D3A52"
+            },
+            {
+                id: 3,
+                title: "Enchanted Forest Path",
+                description: "A mysterious trail winds through ancient trees, lit by fireflies dancing in the darkness",
+                date: "August 3, 2024",
+                dominantColor: "#1A2E1A"
+            },
+            {
+                id: 4,
+                title: "City of Golden Lights",
+                description: "Urban constellations twinkle below as the city sleeps, dreams rising like gentle smoke",
+                date: "August 4, 2024",
+                dominantColor: "#2A1F0D"
+            }
+        ];
+
+        this.isLoaded = false;
+        this.init();
     }
-  ]
-};
 
-// Global state management
-let currentPhotoIndex = 0;
-let currentStage = 'gift-card';
-let isTransitioning = false;
+    init() {
+        // Wait for DOM and GSAP to be ready
+        if (typeof gsap === 'undefined') {
+            setTimeout(() => this.init(), 100);
+            return;
+        }
 
-// Enhanced stage management with smooth transitions
-function switchToStage(targetStage) {
-  if (isTransitioning) return;
-  
-  console.log(`🎬 Switching from ${currentStage} to ${targetStage}`);
-  isTransitioning = true;
-  
-  const currentStageElement = document.querySelector('.stage.active');
-  const targetStageElement = document.getElementById(targetStage + '-stage');
+        this.setupGSAP();
+        this.startLoadingSequence();
+        this.setupEventListeners();
+        this.initializePhotoAlbum();
+        this.detectReducedMotion();
+        this.isLoaded = true;
+    }
 
-  if (currentStageElement && targetStageElement) {
-    currentStageElement.classList.remove('active');
-    currentStageElement.classList.add('exiting');
-    
-    setTimeout(() => {
-      currentStageElement.classList.remove('exiting');
-      targetStageElement.classList.add('active');
-      currentStage = targetStage;
-      isTransitioning = false;
-      console.log(`✅ Successfully switched to ${targetStage}`);
-    }, 200);
-  } else {
-    console.error('❌ Stage elements not found:', { currentStageElement, targetStageElement });
-    isTransitioning = false;
-  }
-}
+    detectReducedMotion() {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (prefersReducedMotion.matches) {
+            document.documentElement.style.setProperty('--animation-duration', '0.01s');
+        }
+    }
 
-// Enhanced ripple effect with better positioning
-function createRipple(event) {
-  const button = event.currentTarget;
-  const ripple = button.querySelector('.ripple-effect');
-  
-  if (!ripple) return;
+    setupGSAP() {
+        if (typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+        }
 
-  const rect = button.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height);
-  const x = event.clientX - rect.left - size / 2;
-  const y = event.clientY - rect.top - size / 2;
+        // Setup scroll-triggered animations for cards
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach((card, index) => {
+            if (index === 0) return; // Skip loading card
 
-  ripple.style.width = ripple.style.height = size + 'px';
-  ripple.style.left = x + 'px';
-  ripple.style.top = y + 'px';
+            if (typeof ScrollTrigger !== 'undefined') {
+                ScrollTrigger.create({
+                    trigger: card,
+                    start: "top bottom",
+                    end: "bottom top",
+                    onEnter: () => this.animateCardEnter(card),
+                    onLeave: () => this.animateCardLeave(card),
+                    onEnterBack: () => this.animateCardEnter(card),
+                    onLeaveBack: () => this.animateCardLeave(card)
+                });
+            }
+        });
+    }
 
-  // Reset animation
-  ripple.style.animation = 'none';
-  ripple.offsetHeight; // Trigger reflow
-  ripple.style.animation = 'ripple-animation 0.6s linear';
-}
+    animateCardEnter(card) {
+        gsap.to(card, {
+            scale: 1,
+            opacity: 1,
+            duration: 0.6,
+            ease: "power2.out"
+        });
+    }
 
-// Stage 1: Enhanced Gift Card with Cake Animation
-function initGiftCardStage() {
-  console.log('🎂 Initializing Gift Card Stage');
-  
-  const openGiftBtn = document.getElementById('open-gift-btn');
-  const cakeContainer = document.getElementById('cake-container');
-  const continueBtn = document.getElementById('continue-from-cake');
-  const confettiContainer = document.getElementById('confetti-container');
-  
-  if (!openGiftBtn) {
-    console.error('❌ Open gift button not found');
-    return;
-  }
-  
-  openGiftBtn.addEventListener('click', (e) => {
-    console.log('🎁 Open Gift button clicked');
-    createRipple(e);
-    
-    // Disable button to prevent multiple clicks
-    openGiftBtn.disabled = true;
-    openGiftBtn.style.opacity = '0.6';
-    
-    // Start the cake animation sequence
-    setTimeout(() => {
-      console.log('🎂 Starting cake animation');
-      
-      // Hide the open gift button
-      openGiftBtn.style.transition = 'all 0.3s ease';
-      openGiftBtn.style.opacity = '0';
-      openGiftBtn.style.transform = 'translateY(20px)';
-      
-      // Show cake with bounce animation
-      setTimeout(() => {
-        if (cakeContainer) {
-          cakeContainer.classList.remove('hidden');
-          cakeContainer.classList.add('show');
-          console.log('🎂 Cake container shown');
+    animateCardLeave(card) {
+        gsap.to(card, {
+            scale: 0.95,
+            opacity: 0.7,
+            duration: 0.4,
+            ease: "power2.in"
+        });
+    }
+
+    startLoadingSequence() {
+        const progressFill = document.querySelector('.progress-fill');
+        const loadingCard = document.getElementById('loading-card');
+        
+        if (!progressFill) return;
+        
+        // Animate progress bar
+        gsap.to(progressFill, {
+            width: '100%',
+            duration: 3,
+            ease: "power2.inOut",
+            onComplete: () => {
+                setTimeout(() => {
+                    this.transitionToIntro();
+                }, 500);
+            }
+        });
+
+        // Add stardust particles to progress bar
+        this.createProgressParticles();
+    }
+
+    createProgressParticles() {
+        const container = document.querySelector('.stardust-particles');
+        if (!container) return;
+
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 2px;
+                height: 2px;
+                background: #FFD166;
+                border-radius: 50%;
+                pointer-events: none;
+                opacity: 0;
+            `;
+            container.appendChild(particle);
+
+            gsap.to(particle, {
+                x: Math.random() * 300,
+                y: Math.random() * 20 - 10,
+                opacity: 1,
+                duration: 0.5,
+                delay: Math.random() * 2,
+                repeat: -1,
+                repeatDelay: Math.random() * 3,
+                ease: "power2.out"
+            });
+        }
+    }
+
+    transitionToIntro() {
+        const loadingCard = document.getElementById('loading-card');
+        const introCard = document.getElementById('intro-card');
+        
+        if (!loadingCard) return;
+        
+        gsap.to(loadingCard, {
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.inOut",
+            onComplete: () => {
+                loadingCard.style.display = 'none';
+                this.animateIntroElements();
+            }
+        });
+    }
+
+    animateIntroElements() {
+        const title = document.querySelector('.intro-title');
+        const button = document.querySelector('.open-gift-btn');
+        
+        if (!title || !button) return;
+        
+        gsap.timeline()
+            .from(title, {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power2.out"
+            })
+            .from(button, {
+                y: 30,
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.8,
+                ease: "back.out(1.7)"
+            }, "-=0.5");
+    }
+
+    setupEventListeners() {
+        // Open Gift button
+        const openGiftBtn = document.getElementById('open-gift-btn');
+        if (openGiftBtn) {
+            openGiftBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.scrollToNext('intro-card');
+                this.addStardustEffect(openGiftBtn);
+            });
+        }
+
+        // Light candles button
+        const lightCandlesBtn = document.getElementById('light-candles-btn');
+        if (lightCandlesBtn) {
+            lightCandlesBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.lightCandles();
+            });
+        }
+
+        // Envelope interactions
+        this.setupEnvelopeInteractions();
+
+        // Spoiler reveal button
+        const revealBtn = document.getElementById('reveal-btn');
+        if (revealBtn) {
+            revealBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.revealSpoiler();
+                this.addStardustEffect(revealBtn);
+            });
+        }
+
+        // Photo album navigation
+        const prevBtn = document.getElementById('prev-photo');
+        const nextBtn = document.getElementById('next-photo');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.previousPhoto();
+            });
         }
         
-        // Trigger confetti
-        if (confettiContainer) {
-          confettiContainer.classList.add('active');
-          console.log('🎉 Confetti activated');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.nextPhoto();
+            });
+        }
+
+        // Photo indicators
+        const indicators = document.querySelectorAll('.indicator');
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                this.currentPhoto = index;
+                this.animatePhotoTransition('direct');
+            });
+        });
+
+        // Finale buttons
+        const replayBtn = document.getElementById('replay-btn');
+        const shareBtn = document.getElementById('share-btn');
+        
+        if (replayBtn) {
+            replayBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.replayExperience();
+            });
         }
         
-        // Show continue button after cake animation
+        if (shareBtn) {
+            shareBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.shareExperience();
+            });
+        }
+
+        // Touch swipe for photo album
+        this.setupPhotoSwipe();
+
+        // Add hover effects to buttons
+        this.setupButtonHoverEffects();
+    }
+
+    addStardustEffect(button) {
+        const effect = button.querySelector('.stardust-effect');
+        if (!effect) return;
+
+        // Clear existing particles
+        effect.innerHTML = '';
+
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 3px;
+                height: 3px;
+                background: #FFD166;
+                border-radius: 50%;
+                pointer-events: none;
+                top: 50%;
+                left: 50%;
+            `;
+            effect.appendChild(particle);
+
+            const angle = (i / 15) * 360;
+            const distance = 30 + Math.random() * 20;
+            
+            gsap.to(particle, {
+                x: Math.cos(angle * Math.PI / 180) * distance,
+                y: Math.sin(angle * Math.PI / 180) * distance,
+                opacity: 0,
+                duration: 0.8,
+                ease: "power2.out",
+                onComplete: () => particle.remove()
+            });
+        }
+    }
+
+    scrollToNext(currentCardId) {
+        const currentCard = document.getElementById(currentCardId);
+        const nextCard = currentCard?.nextElementSibling;
+        
+        if (nextCard) {
+            nextCard.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }
+
+    lightCandles() {
+        const candles = document.querySelectorAll('.candle');
+        const sparksContainer = document.querySelector('.sparks-container');
+        const lightButton = document.getElementById('light-candles-btn');
+        
+        if (!candles.length) return;
+        
+        // Disable button during animation
+        if (lightButton) {
+            lightButton.disabled = true;
+            lightButton.textContent = 'Lighting...';
+        }
+        
+        const timeline = gsap.timeline();
+        
+        candles.forEach((candle, index) => {
+            const flame = candle.querySelector('.candle-flame');
+            
+            timeline
+                .to(candle, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.3,
+                    ease: "power2.out"
+                }, index * 0.5)
+                .to(flame, {
+                    opacity: 1,
+                    duration: 0.2,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        if (sparksContainer) {
+                            this.createSparks(candle, sparksContainer);
+                        }
+                    }
+                }, index * 0.5 + 0.2);
+        });
+
+        // Confetti burst when all candles are lit
+        timeline.call(() => {
+            this.createConfettiBurst();
+            if (lightButton) {
+                lightButton.textContent = 'Candles Lit! ✨';
+                setTimeout(() => {
+                    lightButton.disabled = false;
+                    lightButton.textContent = 'Light the Candles';
+                }, 2000);
+            }
+        }, null, timeline.totalDuration());
+    }
+
+    createSparks(candle, container) {
+        const candleRect = candle.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        
+        for (let i = 0; i < 8; i++) {
+            const spark = document.createElement('div');
+            spark.style.cssText = `
+                position: absolute;
+                width: 2px;
+                height: 2px;
+                background: #FFD166;
+                border-radius: 50%;
+                top: ${candleRect.top - containerRect.top}px;
+                left: ${candleRect.left - containerRect.left + candleRect.width/2}px;
+                pointer-events: none;
+            `;
+            container.appendChild(spark);
+
+            gsap.to(spark, {
+                x: (Math.random() - 0.5) * 60,
+                y: -Math.random() * 40 - 20,
+                opacity: 0,
+                duration: 1.5,
+                ease: "power2.out",
+                onComplete: () => spark.remove()
+            });
+        }
+    }
+
+    createConfettiBurst() {
+        const container = document.querySelector('.sparks-container');
+        if (!container) return;
+        
+        const colors = ['#FFD166', '#F7931E', '#FF6B35', '#E85A4F'];
+        
+        for (let i = 0; i < 30; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.cssText = `
+                position: absolute;
+                width: 6px;
+                height: 6px;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                top: 50%;
+                left: 50%;
+                pointer-events: none;
+            `;
+            
+            // Random star or circle shape
+            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            if (!confetti.style.borderRadius) {
+                confetti.innerHTML = '✨';
+                confetti.style.fontSize = '8px';
+                confetti.style.background = 'transparent';
+            }
+            
+            container.appendChild(confetti);
+
+            gsap.to(confetti, {
+                x: (Math.random() - 0.5) * 200,
+                y: -Math.random() * 100 - 50,
+                rotation: Math.random() * 360,
+                opacity: 0,
+                duration: 2,
+                ease: "power2.out",
+                onComplete: () => confetti.remove()
+            });
+        }
+    }
+
+    setupEnvelopeInteractions() {
+        const envelope = document.getElementById('envelope');
+        const flap = document.getElementById('envelope-flap');
+        const card = document.getElementById('greeting-card');
+        
+        if (!envelope || !flap || !card) return;
+        
+        let flapOpened = false;
+        let cardPulled = false;
+        let cardFlipped = false;
+
+        // Make flap clickable
+        flap.style.cursor = 'pointer';
+        
+        // Flap click
+        flap.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!flapOpened) {
+                flap.classList.add('opened');
+                flapOpened = true;
+                
+                // Slight card movement to indicate it's ready to be dragged
+                setTimeout(() => {
+                    gsap.to(card, {
+                        y: -20,
+                        duration: 0.4,
+                        ease: "power2.out"
+                    });
+                    card.style.cursor = 'grab';
+                }, 400);
+            }
+        });
+
+        // Card drag
+        let startY = 0;
+        let currentY = 0;
+        let isDragging = false;
+
+        const handleStart = (e) => {
+            if (!flapOpened || cardFlipped) return;
+            isDragging = true;
+            startY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+            card.style.cursor = 'grabbing';
+            e.preventDefault();
+        };
+
+        const handleMove = (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            currentY = (e.type === 'mousemove' ? e.clientY : e.touches[0].clientY) - startY;
+            
+            if (currentY < -20) { // Only allow upward dragging
+                gsap.set(card, { y: Math.max(currentY, -150) });
+            }
+        };
+
+        const handleEnd = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            card.style.cursor = 'grab';
+            e.preventDefault();
+
+            if (currentY < -80 && !cardPulled) {
+                // Card pulled out successfully
+                card.classList.add('pulled');
+                cardPulled = true;
+                
+                gsap.to(card, {
+                    y: -150,
+                    duration: 0.6,
+                    ease: "power2.out"
+                });
+                
+                // Make card clickable to flip
+                setTimeout(() => {
+                    card.style.cursor = 'pointer';
+                }, 600);
+                
+            } else if (currentY < -80) {
+                // Snap back if already pulled
+                gsap.to(card, {
+                    y: -150,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            } else {
+                // Snap back to position
+                gsap.to(card, {
+                    y: flapOpened ? -20 : 0,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            }
+            
+            currentY = 0;
+        };
+
+        // Mouse events
+        card.addEventListener('mousedown', handleStart);
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('mouseup', handleEnd);
+
+        // Touch events
+        card.addEventListener('touchstart', handleStart, { passive: false });
+        document.addEventListener('touchmove', handleMove, { passive: false });
+        document.addEventListener('touchend', handleEnd);
+
+        // Card flip on click (when pulled out)
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (cardPulled && !isDragging) {
+                card.classList.toggle('flipped');
+                cardFlipped = !cardFlipped;
+            }
+        });
+    }
+
+    revealSpoiler() {
+        const mosaic = document.querySelector('.preview-mosaic');
+        const revealBtn = document.getElementById('reveal-btn');
+        
+        if (!mosaic) return;
+        
+        mosaic.classList.add('revealed');
+        
+        if (revealBtn) {
+            revealBtn.textContent = 'Revealed! ✨';
+            revealBtn.disabled = true;
+        }
+        
         setTimeout(() => {
-          if (continueBtn) {
-            continueBtn.classList.remove('hidden');
-            continueBtn.style.transition = 'all 0.5s ease';
-            continueBtn.style.opacity = '1';
-            continueBtn.style.transform = 'translateY(0)';
-            console.log('⏭️ Continue button shown');
-          }
-        }, 1200);
+            this.scrollToNext('spoiler-card');
+        }, 1000);
+    }
+
+    initializePhotoAlbum() {
+        this.updatePhotoDisplay();
+    }
+
+    updatePhotoDisplay() {
+        const photo = this.photos[this.currentPhoto];
+        const photoContent = document.getElementById('photo-content');
+        const photoGradient = document.getElementById('photo-gradient');
+        const photoTitle = document.getElementById('photo-title');
+        const photoDescription = document.getElementById('photo-description');
+        const photoDate = document.getElementById('photo-date');
+        const indicators = document.querySelectorAll('.indicator');
         
-        // Hide confetti after animation
+        if (!photo) return;
+        
+        // Update content
+        if (photoTitle) photoTitle.textContent = photo.title;
+        if (photoDescription) photoDescription.textContent = photo.description;
+        if (photoDate) photoDate.textContent = photo.date;
+        
+        // Update gradient background
+        const gradients = [
+            'linear-gradient(135deg, #0D1B2A 0%, #2D3A52 50%, #1A2E1A 100%)',
+            'linear-gradient(135deg, #2D3A52 0%, #0D1B2A 50%, #5F4B8B 100%)',
+            'linear-gradient(135deg, #1A2E1A 0%, #5F4B8B 50%, #0D1B2A 100%)',
+            'linear-gradient(135deg, #2A1F0D 0%, #FFD166 30%, #0D1B2A 100%)'
+        ];
+        
+        if (photoGradient) {
+            photoGradient.style.background = gradients[this.currentPhoto];
+        }
+        
+        // Update indicators
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === this.currentPhoto);
+        });
+        
+        // Update navigation buttons
+        const prevBtn = document.getElementById('prev-photo');
+        const nextBtn = document.getElementById('next-photo');
+        
+        if (prevBtn) prevBtn.disabled = this.currentPhoto === 0;
+        if (nextBtn) nextBtn.disabled = this.currentPhoto === this.photos.length - 1;
+    }
+
+    previousPhoto() {
+        if (this.currentPhoto > 0) {
+            this.currentPhoto--;
+            this.animatePhotoTransition('left');
+        }
+    }
+
+    nextPhoto() {
+        if (this.currentPhoto < this.photos.length - 1) {
+            this.currentPhoto++;
+            this.animatePhotoTransition('right');
+        }
+    }
+
+    animatePhotoTransition(direction) {
+        const photoContent = document.getElementById('photo-content');
+        
+        if (!photoContent) return;
+        
+        // Slide out animation
+        gsap.to(photoContent, {
+            x: direction === 'right' ? -50 : (direction === 'left' ? 50 : 0),
+            opacity: 0,
+            scale: 0.9,
+            duration: 0.3,
+            ease: "power2.in",
+            onComplete: () => {
+                // Update content
+                this.updatePhotoDisplay();
+                
+                // Slide in animation
+                gsap.fromTo(photoContent, 
+                    {
+                        x: direction === 'right' ? 50 : (direction === 'left' ? -50 : 0),
+                        opacity: 0,
+                        scale: 0.9
+                    },
+                    {
+                        x: 0,
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.4,
+                        ease: "power2.out"
+                    }
+                );
+            }
+        });
+    }
+
+    setupPhotoSwipe() {
+        const photoDisplay = document.querySelector('.photo-display');
+        if (!photoDisplay) return;
+        
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        const handleStart = (e) => {
+            isDragging = true;
+            startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+        };
+
+        const handleMove = (e) => {
+            if (!isDragging) return;
+            currentX = (e.type === 'mousemove' ? e.clientX : e.touches[0].clientX) - startX;
+        };
+
+        const handleEnd = () => {
+            if (!isDragging) return;
+            isDragging = false;
+
+            if (Math.abs(currentX) > 50) {
+                if (currentX > 0 && this.currentPhoto > 0) {
+                    this.previousPhoto();
+                } else if (currentX < 0 && this.currentPhoto < this.photos.length - 1) {
+                    this.nextPhoto();
+                }
+            }
+            
+            currentX = 0;
+        };
+
+        photoDisplay.addEventListener('mousedown', handleStart);
+        photoDisplay.addEventListener('mousemove', handleMove);
+        photoDisplay.addEventListener('mouseup', handleEnd);
+
+        photoDisplay.addEventListener('touchstart', handleStart, { passive: true });
+        photoDisplay.addEventListener('touchmove', handleMove, { passive: true });
+        photoDisplay.addEventListener('touchend', handleEnd);
+    }
+
+    setupButtonHoverEffects() {
+        const buttons = document.querySelectorAll('.btn-primary, .btn-secondary');
+        
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                gsap.to(button, {
+                    scale: 1.05,
+                    duration: 0.2,
+                    ease: "power2.out"
+                });
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                gsap.to(button, {
+                    scale: 1,
+                    duration: 0.2,
+                    ease: "power2.out"
+                });
+            });
+        });
+    }
+
+    replayExperience() {
+        // Reset all states
+        this.currentPhoto = 0;
+        
+        // Scroll to top smoothly
+        const container = document.querySelector('.app-container');
+        if (container) {
+            container.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        } else {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Reset envelope
+        const flap = document.getElementById('envelope-flap');
+        const card = document.getElementById('greeting-card');
+        
+        if (flap) flap.classList.remove('opened');
+        if (card) {
+            card.classList.remove('pulled', 'flipped');
+            card.style.cursor = 'default';
+            gsap.set(card, { y: 0 });
+        }
+        
+        // Reset candles
+        const candles = document.querySelectorAll('.candle');
+        candles.forEach(candle => {
+            const flame = candle.querySelector('.candle-flame');
+            gsap.set(candle, { opacity: 0, y: 20 });
+            if (flame) gsap.set(flame, { opacity: 0 });
+        });
+        
+        // Reset candle button
+        const lightButton = document.getElementById('light-candles-btn');
+        if (lightButton) {
+            lightButton.disabled = false;
+            lightButton.textContent = 'Light the Candles';
+        }
+        
+        // Reset spoiler
+        const mosaic = document.querySelector('.preview-mosaic');
+        const revealBtn = document.getElementById('reveal-btn');
+        
+        if (mosaic) mosaic.classList.remove('revealed');
+        if (revealBtn) {
+            revealBtn.textContent = 'Reveal';
+            revealBtn.disabled = false;
+        }
+        
+        // Reset photo album
+        this.updatePhotoDisplay();
+        
+        // Show loading card and restart
+        const loadingCard = document.getElementById('loading-card');
+        if (loadingCard) {
+            loadingCard.style.display = 'flex';
+            gsap.set(loadingCard, { opacity: 1 });
+            gsap.set('.progress-fill', { width: '0%' });
+            
+            setTimeout(() => {
+                this.startLoadingSequence();
+            }, 500);
+        }
+    }
+
+    shareExperience() {
+        const shareData = {
+            title: 'Starlit Night Surprise',
+            text: 'Experience a magical journey under the stars ✨',
+            url: window.location.href
+        };
+
+        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+            navigator.share(shareData).catch(err => {
+                console.log('Error sharing:', err);
+                this.fallbackShare();
+            });
+        } else {
+            this.fallbackShare();
+        }
+    }
+
+    fallbackShare() {
+        // Fallback - copy to clipboard
+        const url = window.location.href;
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => {
+                this.showShareNotification('Link copied to clipboard! ✨');
+            }).catch(() => {
+                this.showShareNotification('Starlit Night Surprise: ' + url);
+            });
+        } else {
+            // Even older browser fallback
+            const textArea = document.createElement('textarea');
+            textArea.value = url;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                this.showShareNotification('Link copied to clipboard! ✨');
+            } catch (err) {
+                this.showShareNotification('Share this link: ' + url);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+    }
+
+    showShareNotification(message) {
+        // Show temporary notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--star-gold);
+            color: var(--starlit-night-blue);
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 80%;
+            text-align: center;
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        gsap.fromTo(notification, 
+            { opacity: 0, scale: 0.8 },
+            { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.7)" }
+        );
+        
         setTimeout(() => {
-          if (confettiContainer) {
-            confettiContainer.classList.remove('active');
-          }
-        }, 3500);
-        
-      }, 400);
-    }, 300);
-  });
-  
-  if (continueBtn) {
-    continueBtn.addEventListener('click', (e) => {
-      console.log('⏭️ Continue from cake clicked');
-      createRipple(e);
-      setTimeout(() => {
-        switchToStage('envelope');
-        setTimeout(initEnvelopeStage, 400);
-      }, 200);
-    });
-  }
-}
-
-// Stage 2: Enhanced Envelope with Full Opening Animation
-function initEnvelopeStage() {
-  console.log('✉️ Initializing Envelope Stage');
-  
-  const envelope = document.getElementById('envelope');
-  const letterContainer = document.getElementById('letter-container');
-  const continueBtn = document.getElementById('continue-from-envelope');
-  
-  // Start envelope opening sequence
-  setTimeout(() => {
-    if (envelope) {
-      envelope.classList.add('opening');
-      console.log('✉️ Envelope opening animation started');
+            gsap.to(notification, {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.3,
+                onComplete: () => notification.remove()
+            });
+        }, 3000);
     }
-  }, 600);
-  
-  // Show letter after envelope opens
-  setTimeout(() => {
-    if (letterContainer) {
-      letterContainer.classList.add('show');
-      console.log('📝 Letter revealed');
-    }
-  }, 1400);
-  
-  // Show continue button after letter is revealed
-  setTimeout(() => {
-    if (continueBtn) {
-      continueBtn.classList.remove('hidden');
-      continueBtn.style.transition = 'all 0.5s ease';
-      continueBtn.style.opacity = '1';
-      continueBtn.style.transform = 'translateY(0)';
-      console.log('⏭️ Continue button from envelope shown');
-    }
-  }, 2200);
-  
-  if (continueBtn) {
-    continueBtn.addEventListener('click', (e) => {
-      console.log('⏭️ Continue from envelope clicked');
-      createRipple(e);
-      setTimeout(() => {
-        switchToStage('spoiler');
-        setTimeout(initSpoilerStage, 400);
-      }, 200);
-    });
-  }
 }
 
-// Stage 3: Spoiler Warning with Blur Reveal
-function initSpoilerStage() {
-  console.log('⚠️ Initializing Spoiler Stage');
-  
-  const revealBtn = document.getElementById('reveal-photos-btn');
-  const blurredPreview = document.getElementById('blurred-preview');
-  
-  if (revealBtn) {
-    revealBtn.addEventListener('click', (e) => {
-      console.log('👁️ Reveal photos clicked');
-      createRipple(e);
-      
-      // Start blur reveal animation
-      if (blurredPreview) {
-        blurredPreview.classList.add('revealing');
-        console.log('🌊 Blur reveal started');
-      }
-      
-      setTimeout(() => {
-        switchToStage('photo-album');
-        setTimeout(() => {
-          initPhotoAlbumStage();
-        }, 400);
-      }, 1600);
-    });
-  }
-}
+// Initialize the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new StarlitApp();
+});
 
-// Stage 4: Enhanced Photo Album with Cassie Codes Layout
-function initPhotoAlbumStage() {
-  console.log('📸 Initializing Photo Album Stage');
-  
-  // Initialize photo indicators
-  createPhotoIndicators();
-  
-  // Load first photo
-  loadPhoto(0);
-  
-  // Setup navigation
-  const navPrev = document.getElementById('nav-prev');
-  const navNext = document.getElementById('nav-next');
-  
-  if (navPrev) {
-    navPrev.addEventListener('click', () => {
-      console.log('⬅️ Previous photo clicked');
-      navigatePhoto(-1);
-    });
-  }
-  
-  if (navNext) {
-    navNext.addEventListener('click', () => {
-      console.log('➡️ Next photo clicked');
-      navigatePhoto(1);
-    });
-  }
-  
-  // Setup touch gestures and keyboard navigation
-  setupTouchGestures();
-  setupKeyboardNavigation();
-}
-
-function createPhotoIndicators() {
-  const indicatorsContainer = document.getElementById('photo-indicators');
-  if (!indicatorsContainer) return;
-  
-  indicatorsContainer.innerHTML = '';
-  
-  photosData.photos.forEach((_, index) => {
-    const dot = document.createElement('div');
-    dot.className = 'indicator-dot';
-    if (index === 0) dot.classList.add('active');
-    
-    dot.addEventListener('click', () => {
-      if (index !== currentPhotoIndex) {
-        console.log(`📍 Indicator ${index} clicked`);
-        loadPhoto(index);
-      }
-    });
-    
-    indicatorsContainer.appendChild(dot);
-  });
-  
-  console.log('📍 Photo indicators created');
-}
-
-function loadPhoto(index) {
-  if (index < 0 || index >= photosData.photos.length) return;
-  
-  console.log(`📸 Loading photo ${index}`);
-  
-  const photo = photosData.photos[index];
-  const currentPhoto = document.getElementById('current-photo');
-  const photoTitle = document.getElementById('photo-title');
-  const photoDescription = document.getElementById('photo-description');
-  const photoLoader = document.getElementById('photo-loader');
-  const navPrev = document.getElementById('nav-prev');
-  const navNext = document.getElementById('nav-next');
-  
-  // Show loader
-  if (photoLoader) photoLoader.style.display = 'block';
-  if (currentPhoto) currentPhoto.style.opacity = '0.5';
-  
-  // Create new image to ensure proper loading
-  const img = new Image();
-  
-  img.onload = () => {
-    console.log(`✅ Photo ${index} loaded successfully`);
-    
-    // Update photo
-    if (currentPhoto) {
-      currentPhoto.src = photo.image;
-      currentPhoto.alt = photo.title;
-    }
-    
-    // Update text content with smooth animation
-    if (photoTitle && photoDescription) {
-      photoTitle.style.opacity = '0';
-      photoDescription.style.opacity = '0';
-      
-      setTimeout(() => {
-        photoTitle.textContent = photo.title;
-        photoDescription.textContent = photo.message;
-        
-        photoTitle.style.opacity = '1';
-        photoDescription.style.opacity = '1';
-      }, 150);
-    }
-    
-    // Hide loader and show photo
-    if (photoLoader) photoLoader.style.display = 'none';
-    if (currentPhoto) currentPhoto.style.opacity = '1';
-    
-    // Update current index
-    currentPhotoIndex = index;
-    
-    // Update navigation buttons
-    if (navPrev) navPrev.disabled = index === 0;
-    if (navNext) navNext.disabled = index === photosData.photos.length - 1;
-    
-    // Update indicators
-    updatePhotoIndicators();
-  };
-  
-  img.onerror = () => {
-    console.warn(`⚠️ Failed to load image: ${photo.image}`);
-    if (photoLoader) photoLoader.style.display = 'none';
-    if (currentPhoto) currentPhoto.style.opacity = '1';
-  };
-  
-  img.src = photo.image;
-}
-
-function updatePhotoIndicators() {
-  const indicators = document.querySelectorAll('.indicator-dot');
-  indicators.forEach((dot, index) => {
-    dot.classList.toggle('active', index === currentPhotoIndex);
-  });
-}
-
-function navigatePhoto(direction) {
-  const newIndex = currentPhotoIndex + direction;
-  if (newIndex >= 0 && newIndex < photosData.photos.length) {
-    loadPhoto(newIndex);
-  }
-}
-
-// Touch gesture support for photo swiping
-function setupTouchGestures() {
-  const photoContainer = document.querySelector('.photo-container');
-  if (!photoContainer) return;
-  
-  let touchStartX = 0;
-  let touchEndX = 0;
-  let touchStartY = 0;
-  let touchEndY = 0;
-  
-  photoContainer.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-  }, { passive: true });
-  
-  photoContainer.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    touchEndY = e.changedTouches[0].screenY;
-    handleSwipe();
-  }, { passive: true });
-  
-  function handleSwipe() {
-    const swipeThreshold = 75;
-    const verticalThreshold = 100;
-    const horizontalDistance = touchEndX - touchStartX;
-    const verticalDistance = Math.abs(touchEndY - touchStartY);
-    
-    // Only handle horizontal swipes
-    if (verticalDistance > verticalThreshold) return;
-    
-    if (Math.abs(horizontalDistance) > swipeThreshold) {
-      if (horizontalDistance > 0 && currentPhotoIndex > 0) {
-        console.log('👈 Swipe right - previous photo');
-        navigatePhoto(-1);
-      } else if (horizontalDistance < 0 && currentPhotoIndex < photosData.photos.length - 1) {
-        console.log('👉 Swipe left - next photo');
-        navigatePhoto(1);
-      }
-    }
-  }
-  
-  console.log('👆 Touch gestures setup complete');
-}
-
-// Keyboard navigation support
-function setupKeyboardNavigation() {
-  document.addEventListener('keydown', (e) => {
-    if (currentStage !== 'photo-album') return;
-    
-    switch(e.key) {
-      case 'ArrowLeft':
-        e.preventDefault();
-        if (currentPhotoIndex > 0) {
-          console.log('⌨️ Left arrow - previous photo');
-          navigatePhoto(-1);
-        }
-        break;
-      case 'ArrowRight':
-        e.preventDefault();
-        if (currentPhotoIndex < photosData.photos.length - 1) {
-          console.log('⌨️ Right arrow - next photo');
-          navigatePhoto(1);
-        }
-        break;
-      case ' ':
-        e.preventDefault();
-        if (currentPhotoIndex < photosData.photos.length - 1) {
-          console.log('⌨️ Space - next photo');
-          navigatePhoto(1);
-        }
-        break;
-    }
-  });
-  
-  console.log('⌨️ Keyboard navigation setup complete');
-}
-
-// Performance optimization: Preload images
-function preloadImages() {
-  console.log('🔄 Preloading images...');
-  
-  const imagePromises = photosData.photos.slice(0, 4).map(photo => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = resolve;
-      img.onerror = reject;
-      img.src = photo.image;
-    });
-  });
-  
-  Promise.all(imagePromises)
-    .then(() => console.log('✅ Critical images preloaded successfully'))
-    .catch(() => console.log('⚠️ Some images failed to preload'));
-}
-
-// Initialize application with enhanced error handling
-function initializeApp() {
-  console.log('🌺 Enhanced Poppy Gift Card App Initializing...');
-  
-  try {
-    // Verify critical elements exist
-    const criticalElements = [
-      'gift-card-stage',
-      'envelope-stage', 
-      'spoiler-stage',
-      'photo-album-stage',
-      'open-gift-btn'
-    ];
-    
-    const missingElements = criticalElements.filter(id => !document.getElementById(id));
-    
-    if (missingElements.length > 0) {
-      console.error('❌ Missing critical elements:', missingElements);
-      return;
-    }
-    
-    // Initialize first stage
-    initGiftCardStage();
-    
-    // Setup performance optimizations
-    preloadImages();
-    
-    // Add visual feedback for app ready state
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-      document.body.style.transition = 'opacity 0.5s ease';
-      document.body.style.opacity = '1';
-    }, 100);
-    
-    console.log('✨ App ready! Click "Open Gift" to start your journey!');
-    
-  } catch (error) {
-    console.error('❌ App initialization failed:', error);
-    
-    // Fallback error handling
-    const errorDiv = document.createElement('div');
-    errorDiv.innerHTML = `
-      <div style="text-align: center; padding: 50px; font-family: var(--font-family-base); max-width: 400px; margin: 0 auto; background: var(--color-surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
-        <h1 style="color: #E53E3E; margin-bottom: 16px;">Oops! Something went wrong</h1>
-        <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Please refresh the page to try again.</p>
-        <button onclick="location.reload()" style="padding: 12px 24px; background: #E53E3E; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 16px;">
-          Refresh Page
-        </button>
-      </div>
-    `;
-    document.body.appendChild(errorDiv);
-  }
-}
-
-// Handle page visibility changes for performance
+// Handle page visibility for performance
 document.addEventListener('visibilitychange', () => {
-  const animations = document.querySelectorAll('.petal, .confetti, .cake');
-  if (document.hidden) {
-    animations.forEach(el => {
-      el.style.animationPlayState = 'paused';
-    });
-  } else {
-    animations.forEach(el => {
-      el.style.animationPlayState = 'running';
-    });
-  }
+    if (document.hidden) {
+        // Pause animations when page is not visible
+        if (typeof gsap !== 'undefined') {
+            gsap.globalTimeline.pause();
+        }
+    } else {
+        // Resume animations when page becomes visible
+        if (typeof gsap !== 'undefined') {
+            gsap.globalTimeline.resume();
+        }
+    }
 });
 
-// Initialize the application
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-  initializeApp();
-}
-
-// Global error handlers
-window.addEventListener('error', (e) => {
-  console.error('❌ Global error:', e.error);
+// Handle resize events
+window.addEventListener('resize', () => {
+    // Refresh ScrollTrigger on resize
+    if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
+    }
 });
-
-window.addEventListener('unhandledrejection', (e) => {
-  console.error('❌ Unhandled promise rejection:', e.reason);
-  e.preventDefault();
-});
-
-// Debug exports
-if (typeof window !== 'undefined') {
-  window.AppDebug = {
-    photosData,
-    currentPhotoIndex: () => currentPhotoIndex,
-    currentStage: () => currentStage,
-    switchToStage,
-    loadPhoto,
-    initGiftCardStage,
-    initEnvelopeStage,
-    initSpoilerStage,
-    initPhotoAlbumStage
-  };
-}

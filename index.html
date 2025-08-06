@@ -3,193 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poppy Gift Card - Surprise Inside!</title>
+    <title>Starlit Night Surprise</title>
+    <meta name="description" content="A magical gift card experience under the stars">
+    <meta name="theme-color" content="#FFD166">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Floating Poppy Petals Background -->
-    <div class="floating-petals">
-        <div class="petal petal-1"></div>
-        <div class="petal petal-2"></div>
-        <div class="petal petal-3"></div>
-        <div class="petal petal-4"></div>
-        <div class="petal petal-5"></div>
-        <div class="petal petal-6"></div>
-    </div>
-
-    <!-- Confetti Animation -->
-    <div class="confetti-container" id="confetti-container">
-        <div class="confetti confetti-1"></div>
-        <div class="confetti confetti-2"></div>
-        <div class="confetti confetti-3"></div>
-        <div class="confetti confetti-4"></div>
-        <div class="confetti confetti-5"></div>
-        <div class="confetti confetti-6"></div>
-        <div class="confetti confetti-7"></div>
-        <div class="confetti confetti-8"></div>
-    </div>
-
-    <!-- Stage 1: Initial Gift Card with Cake Pop-out -->
-    <section id="gift-card-stage" class="stage active">
-        <div class="container">
-            <div class="gift-card" id="gift-card">
-                <div class="gift-card-header">
-                    <div class="poppy-icon">🌺</div>
-                    <h1 class="gift-card-title">Special Gift</h1>
+    <main class="app-container" id="app">
+        <!-- Loading Card -->
+        <section class="card loading-card" id="loading-card">
+            <div class="card-content">
+                <div class="star-orbit">
+                    <div class="crescent-moon">🌙</div>
+                    <div class="star-spinner">⭐</div>
                 </div>
-                <div class="gift-card-body">
-                    <div class="gift-pattern">
-                        <div class="pattern-circle"></div>
-                        <div class="pattern-circle"></div>
-                        <div class="pattern-circle"></div>
-                    </div>
-                    <p class="gift-message">A wonderful surprise awaits you...</p>
-                </div>
-                <div class="gift-card-footer">
-                    <button class="btn btn--primary ripple" id="open-gift-btn">
-                        <span>Open Gift</span>
-                        <div class="ripple-effect"></div>
-                    </button>
-                </div>
-                
-                <!-- Animated Cake Pop-out -->
-                <div class="cake-container hidden" id="cake-container">
-                    <div class="cake">
-                        <div class="cake-base"></div>
-                        <div class="cake-middle"></div>
-                        <div class="cake-top"></div>
-                        <div class="candles">
-                            <div class="candle candle-1">
-                                <div class="candle-stick"></div>
-                                <div class="flame flame-1"></div>
-                            </div>
-                            <div class="candle candle-2">
-                                <div class="candle-stick"></div>
-                                <div class="flame flame-2"></div>
-                            </div>
-                            <div class="candle candle-3">
-                                <div class="candle-stick"></div>
-                                <div class="flame flame-3"></div>
-                            </div>
-                        </div>
-                        <div class="cake-face">
-                            <div class="cake-eyes">
-                                <div class="eye"></div>
-                                <div class="eye"></div>
-                            </div>
-                            <div class="cake-mouth"></div>
-                        </div>
+                <h1 class="card-title">Gathering Stardust...</h1>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                        <div class="stardust-particles"></div>
                     </div>
                 </div>
             </div>
-            <button class="btn btn--primary ripple hidden" id="continue-from-cake">
-                <span>Continue</span>
-                <div class="ripple-effect"></div>
-            </button>
-        </div>
-    </section>
+        </section>
 
-    <!-- Stage 2: Full Envelope Opening Animation -->
-    <section id="envelope-stage" class="stage">
-        <div class="container">
-            <div class="envelope-container">
-                <div class="envelope" id="envelope">
-                    <div class="envelope-back"></div>
-                    <div class="envelope-front-left"></div>
-                    <div class="envelope-front-right"></div>
-                    <div class="envelope-flap"></div>
-                    <div class="envelope-seal">💝</div>
+        <!-- Intro Card -->
+        <section class="card intro-card" id="intro-card">
+            <div class="card-content">
+                <div class="shooting-star-container">
+                    <div class="shooting-star">✨</div>
                 </div>
-                <div class="letter-container" id="letter-container">
-                    <div class="letter">
-                        <div class="letter-header">
-                            <h2>🌸 Dear Friend 🌸</h2>
-                        </div>
-                        <div class="letter-content">
-                            <p>Surprise! You're about to see some wonderfully weird photos that will make you smile. Each one has a special story to tell.</p>
-                            <p>Get ready for the unexpected! These moments captured in time are sure to bring joy to your day.</p>
-                            <p>Sometimes the most beautiful surprises come in the strangest packages... 📸✨</p>
-                        </div>
-                        <div class="letter-signature">
-                            <p>With love and laughter,</p>
-                            <p class="signature-name">Your Secret Friend 💝</p>
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn--primary ripple hidden" id="continue-from-envelope">
-                    <span>Continue</span>
-                    <div class="ripple-effect"></div>
+                <h1 class="card-title intro-title">Make a Wish</h1>
+                <button class="btn-primary open-gift-btn" id="open-gift-btn">
+                    <span>Open Gift</span>
+                    <div class="stardust-effect"></div>
                 </button>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Stage 3: Spoiler Warning Card -->
-    <section id="spoiler-stage" class="stage">
-        <div class="container">
-            <div class="spoiler-card">
-                <div class="spoiler-header">
-                    <div class="warning-icon">⚠️</div>
-                    <h1>Spoiler Alert!</h1>
-                </div>
-                <div class="spoiler-preview">
-                    <div class="blurred-preview" id="blurred-preview">
-                        <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=300&h=200&fit=crop" alt="Preview" class="preview-image">
-                        <div class="blur-overlay"></div>
+        <!-- Constellation Cake Card -->
+        <section class="card cake-card" id="cake-card">
+            <div class="card-content">
+                <h2 class="card-title">Constellation Cake</h2>
+                <div class="cake-container">
+                    <div class="cake">
+                        <div class="cake-tier tier-3"></div>
+                        <div class="cake-tier tier-2"></div>
+                        <div class="cake-tier tier-1"></div>
+                        <div class="candles-container">
+                            <div class="candle" data-candle="0">
+                                <div class="candle-body"></div>
+                                <div class="candle-flame">🔥</div>
+                            </div>
+                            <div class="candle" data-candle="1">
+                                <div class="candle-body"></div>
+                                <div class="candle-flame">🔥</div>
+                            </div>
+                            <div class="candle" data-candle="2">
+                                <div class="candle-body"></div>
+                                <div class="candle-flame">🔥</div>
+                            </div>
+                            <div class="candle" data-candle="3">
+                                <div class="candle-body"></div>
+                                <div class="candle-flame">🔥</div>
+                            </div>
+                            <div class="candle" data-candle="4">
+                                <div class="candle-body"></div>
+                                <div class="candle-flame">🔥</div>
+                            </div>
+                        </div>
+                        <div class="sparks-container"></div>
                     </div>
-                    <div class="reveal-text">
-                        <p class="warning-message">Warning: What you're about to see cannot be unseen... but it will definitely make you laugh!</p>
-                        <p class="hint-text">Are you ready for some wonderfully weird photos?</p>
-                    </div>
                 </div>
-                <div class="spoiler-actions">
-                    <button class="btn btn--primary ripple pulse-btn" id="reveal-photos-btn">
-                        <span>Reveal Photos</span>
-                        <div class="ripple-effect"></div>
-                    </button>
-                </div>
+                <button class="btn-secondary light-candles-btn" id="light-candles-btn">Light the Candles</button>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Stage 4: Enhanced Photo Album -->
-    <section id="photo-album-stage" class="stage">
-        <div class="container">
-            <div class="album-header">
-                <h1 class="album-title bounce-in">Weird Photos</h1>
-                <p class="album-subtitle">A collection of wonderfully strange moments</p>
-            </div>
-            
-            <!-- Main Photo Display -->
-            <div class="photo-viewer" id="photo-viewer">
-                <div class="photo-display">
-                    <div class="photo-navigation">
-                        <button class="nav-btn nav-prev" id="nav-prev" aria-label="Previous photo">
-                            <span>‹</span>
-                        </button>
-                        <button class="nav-btn nav-next" id="nav-next" aria-label="Next photo">
-                            <span>›</span>
-                        </button>
-                    </div>
-                    <div class="photo-container">
-                        <img id="current-photo" src="" alt="" class="main-photo">
-                        <div class="photo-loader" id="photo-loader">
-                            <div class="loader-spinner"></div>
+        <!-- Envelope Card -->
+        <section class="card envelope-card" id="envelope-card">
+            <div class="card-content">
+                <h2 class="card-title">Special Delivery</h2>
+                <div class="envelope-container">
+                    <div class="envelope" id="envelope">
+                        <div class="envelope-flap" id="envelope-flap"></div>
+                        <div class="envelope-body"></div>
+                        <div class="greeting-card" id="greeting-card">
+                            <div class="card-front">
+                                <div class="constellation-pattern">✨ ⭐ 🌟 ✨ ⭐</div>
+                                <p>For Someone Special</p>
+                            </div>
+                            <div class="card-inside">
+                                <p class="handwritten">My dearest friend,<br><br>Under these stars tonight I wanted to share something magical with you...<br><br>Every moment we've shared shines brighter than any constellation.<br><br>With love,<br>Your friend ✨</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="photo-info">
-                    <h2 id="photo-title" class="photo-title"></h2>
-                    <p id="photo-description" class="photo-description"></p>
-                </div>
-                
-                <div class="photo-indicators" id="photo-indicators">
-                    <!-- Dots will be generated dynamically -->
+                <div class="envelope-instructions">
+                    <p>Tap the envelope flap, then drag the card out</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Spoiler Warning Card -->
+        <section class="card spoiler-card" id="spoiler-card">
+            <div class="card-content">
+                <h2 class="card-title spoiler-title">✨ SPOILER AHEAD ✨</h2>
+                <div class="preview-mosaic">
+                    <div class="mosaic-tile" style="background: linear-gradient(45deg, #0D1B2A, #5F4B8B);">Mountain</div>
+                </div>
+                <button class="btn-primary reveal-btn" id="reveal-btn">
+                    <span>Reveal</span>
+                    <div class="stardust-effect"></div>
+                </button>
+            </div>
+        </section>
+
+        <!-- Photo Album Card -->
+        <section class="card album-card" id="album-card">
+            <div class="card-content">
+                <h2 class="card-title">Starlit Memories</h2>
+                <div class="photo-container">
+                    <div class="photo-display">
+                        <div class="photo-placeholder" id="current-photo">
+                            <div class="photo-content" id="photo-content">
+                                <div class="photo-gradient" id="photo-gradient"></div>
+                                <h3 class="photo-title" id="photo-title">Starlit Mountain Peak</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="photo-info">
+                        <p class="photo-description" id="photo-description">Where dreams touch the sky under countless stars, a moment of pure magic captured forever</p>
+                        <p class="photo-date" id="photo-date">August 1, 2024</p>
+                    </div>
+                    <div class="album-controls">
+                        <button class="btn-nav prev-btn" id="prev-photo" disabled>Previous</button>
+                        <div class="photo-indicators" id="photo-indicators">
+                            <span class="indicator active"></span>
+                            <span class="indicator"></span>
+                            <span class="indicator"></span>
+                            <span class="indicator"></span>
+                        </div>
+                        <button class="btn-nav next-btn" id="next-photo">Next</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Good Night Finale Card -->
+        <section class="card finale-card" id="finale-card">
+            <div class="card-content">
+                <div class="shooting-stars-loop">
+                    <div class="shooting-star-finale">✨</div>
+                    <div class="shooting-star-finale">🌟</div>
+                    <div class="shooting-star-finale">⭐</div>
+                </div>
+                <h2 class="card-title finale-title">Good Night</h2>
+                <p class="finale-message">Thank you for sharing this moment</p>
+                <div class="finale-buttons">
+                    <button class="btn-secondary replay-btn" id="replay-btn">🔄 Replay</button>
+                    <button class="btn-primary share-btn" id="share-btn">📤 Share</button>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script src="app.js"></script>
 </body>
