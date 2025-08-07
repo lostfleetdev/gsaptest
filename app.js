@@ -8,28 +8,32 @@ class StarlitApp {
                 title: "Starlit Mountain Peak",
                 description: "Where dreams touch the sky under countless stars, a moment of pure magic captured forever",
                 date: "August 1, 2024",
-                dominantColor: "#0D1B2A"
+                dominantColor: "#0D1B2A",
+                image: "https://images.unsplash.com/photo-1483728642387-6c351b4d6788?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
             },
             {
                 id: 2,
                 title: "Moonlit Ocean Waves",
                 description: "Gentle waves reflecting moonbeams, each ripple carrying wishes to distant shores",
                 date: "August 2, 2024",
-                dominantColor: "#2D3A52"
+                dominantColor: "#2D3A52",
+                image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
             },
             {
                 id: 3,
                 title: "Enchanted Forest Path",
                 description: "A mysterious trail winds through ancient trees, lit by fireflies dancing in the darkness",
                 date: "August 3, 2024",
-                dominantColor: "#1A2E1A"
+                dominantColor: "#1A2E1A",
+                image: "https://images.unsplash.com/photo-1501854143455-4c4d2b45b34a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
             },
             {
                 id: 4,
                 title: "City of Golden Lights",
                 description: "Urban constellations twinkle below as the city sleeps, dreams rising like gentle smoke",
                 date: "August 4, 2024",
-                dominantColor: "#2A1F0D"
+                dominantColor: "#2A1F0D",
+                image: "https://images.unsplash.com/photo-1490642914612-34836f3563a4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
             }
         ];
 
@@ -204,17 +208,23 @@ class StarlitApp {
             });
         }
 
-        // Light candles button
-        const lightCandlesBtn = document.getElementById('light-candles-btn');
-        if (lightCandlesBtn) {
-            lightCandlesBtn.addEventListener('click', (e) => {
+        // Bloom button
+        const bloomBtn = document.getElementById('bloom-btn');
+        if (bloomBtn) {
+            bloomBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.lightCandles();
+                this.bloomFlower();
             });
         }
 
-        // Envelope interactions
-        this.setupEnvelopeInteractions();
+        // Flip card button
+        const flipBtn = document.getElementById('flip-btn');
+        if (flipBtn) {
+            flipBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.flipCard();
+            });
+        }
 
         // Spoiler reveal button
         const revealBtn = document.getElementById('reveal-btn');
@@ -325,241 +335,16 @@ class StarlitApp {
         }
     }
 
-    lightCandles() {
-        const candles = document.querySelectorAll('.candle');
-        const sparksContainer = document.querySelector('.sparks-container');
-        const lightButton = document.getElementById('light-candles-btn');
-        
-        if (!candles.length) return;
-        
-        // Disable button during animation
-        if (lightButton) {
-            lightButton.disabled = true;
-            lightButton.textContent = 'Lighting...';
-        }
-        
-        const timeline = gsap.timeline();
-        
-        candles.forEach((candle, index) => {
-            const flame = candle.querySelector('.candle-flame');
-            
-            timeline
-                .to(candle, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.3,
-                    ease: "power2.out"
-                }, index * 0.5)
-                .to(flame, {
-                    opacity: 1,
-                    duration: 0.2,
-                    ease: "power2.out",
-                    onComplete: () => {
-                        if (sparksContainer) {
-                            this.createSparks(candle, sparksContainer);
-                        }
-                    }
-                }, index * 0.5 + 0.2);
-        });
-
-        // Confetti burst when all candles are lit
-        timeline.call(() => {
-            this.createConfettiBurst();
-            if (lightButton) {
-                lightButton.textContent = 'Candles Lit! ✨';
-                setTimeout(() => {
-                    lightButton.disabled = false;
-                    lightButton.textContent = 'Light the Candles';
-                }, 2000);
-            }
-        }, null, timeline.totalDuration());
+    bloomFlower() {
+        const flower = document.querySelector('.flower');
+        if (!flower) return;
+        flower.classList.add('bloom');
     }
 
-    createSparks(candle, container) {
-        const candleRect = candle.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        
-        for (let i = 0; i < 8; i++) {
-            const spark = document.createElement('div');
-            spark.style.cssText = `
-                position: absolute;
-                width: 2px;
-                height: 2px;
-                background: #FFD166;
-                border-radius: 50%;
-                top: ${candleRect.top - containerRect.top}px;
-                left: ${candleRect.left - containerRect.left + candleRect.width/2}px;
-                pointer-events: none;
-            `;
-            container.appendChild(spark);
-
-            gsap.to(spark, {
-                x: (Math.random() - 0.5) * 60,
-                y: -Math.random() * 40 - 20,
-                opacity: 0,
-                duration: 1.5,
-                ease: "power2.out",
-                onComplete: () => spark.remove()
-            });
-        }
-    }
-
-    createConfettiBurst() {
-        const container = document.querySelector('.sparks-container');
-        if (!container) return;
-        
-        const colors = ['#FFD166', '#F7931E', '#FF6B35', '#E85A4F'];
-        
-        for (let i = 0; i < 30; i++) {
-            const confetti = document.createElement('div');
-            confetti.style.cssText = `
-                position: absolute;
-                width: 6px;
-                height: 6px;
-                background: ${colors[Math.floor(Math.random() * colors.length)]};
-                top: 50%;
-                left: 50%;
-                pointer-events: none;
-            `;
-            
-            // Random star or circle shape
-            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-            if (!confetti.style.borderRadius) {
-                confetti.innerHTML = '✨';
-                confetti.style.fontSize = '8px';
-                confetti.style.background = 'transparent';
-            }
-            
-            container.appendChild(confetti);
-
-            gsap.to(confetti, {
-                x: (Math.random() - 0.5) * 200,
-                y: -Math.random() * 100 - 50,
-                rotation: Math.random() * 360,
-                opacity: 0,
-                duration: 2,
-                ease: "power2.out",
-                onComplete: () => confetti.remove()
-            });
-        }
-    }
-
-    setupEnvelopeInteractions() {
-        const envelope = document.getElementById('envelope');
-        const flap = document.getElementById('envelope-flap');
-        const card = document.getElementById('greeting-card');
-        
-        if (!envelope || !flap || !card) return;
-        
-        let flapOpened = false;
-        let cardPulled = false;
-        let cardFlipped = false;
-
-        // Make flap clickable
-        flap.style.cursor = 'pointer';
-        
-        // Flap click
-        flap.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (!flapOpened) {
-                flap.classList.add('opened');
-                flapOpened = true;
-                
-                // Slight card movement to indicate it's ready to be dragged
-                setTimeout(() => {
-                    gsap.to(card, {
-                        y: -20,
-                        duration: 0.4,
-                        ease: "power2.out"
-                    });
-                    card.style.cursor = 'grab';
-                }, 400);
-            }
-        });
-
-        // Card drag
-        let startY = 0;
-        let currentY = 0;
-        let isDragging = false;
-
-        const handleStart = (e) => {
-            if (!flapOpened || cardFlipped) return;
-            isDragging = true;
-            startY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
-            card.style.cursor = 'grabbing';
-            e.preventDefault();
-        };
-
-        const handleMove = (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            
-            currentY = (e.type === 'mousemove' ? e.clientY : e.touches[0].clientY) - startY;
-            
-            if (currentY < -20) { // Only allow upward dragging
-                gsap.set(card, { y: Math.max(currentY, -150) });
-            }
-        };
-
-        const handleEnd = (e) => {
-            if (!isDragging) return;
-            isDragging = false;
-            card.style.cursor = 'grab';
-            e.preventDefault();
-
-            if (currentY < -80 && !cardPulled) {
-                // Card pulled out successfully
-                card.classList.add('pulled');
-                cardPulled = true;
-                
-                gsap.to(card, {
-                    y: -150,
-                    duration: 0.6,
-                    ease: "power2.out"
-                });
-                
-                // Make card clickable to flip
-                setTimeout(() => {
-                    card.style.cursor = 'pointer';
-                }, 600);
-                
-            } else if (currentY < -80) {
-                // Snap back if already pulled
-                gsap.to(card, {
-                    y: -150,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            } else {
-                // Snap back to position
-                gsap.to(card, {
-                    y: flapOpened ? -20 : 0,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            }
-            
-            currentY = 0;
-        };
-
-        // Mouse events
-        card.addEventListener('mousedown', handleStart);
-        document.addEventListener('mousemove', handleMove);
-        document.addEventListener('mouseup', handleEnd);
-
-        // Touch events
-        card.addEventListener('touchstart', handleStart, { passive: false });
-        document.addEventListener('touchmove', handleMove, { passive: false });
-        document.addEventListener('touchend', handleEnd);
-
-        // Card flip on click (when pulled out)
-        card.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (cardPulled && !isDragging) {
-                card.classList.toggle('flipped');
-                cardFlipped = !cardFlipped;
-            }
-        });
+    flipCard() {
+        const card = document.getElementById('flip-card');
+        if (!card) return;
+        card.classList.toggle('is-flipped');
     }
 
     revealSpoiler() {
@@ -586,7 +371,7 @@ class StarlitApp {
 
     updatePhotoDisplay() {
         const photo = this.photos[this.currentPhoto];
-        const photoContent = document.getElementById('photo-content');
+        const photoImage = document.getElementById('photo-image');
         const photoGradient = document.getElementById('photo-gradient');
         const photoTitle = document.getElementById('photo-title');
         const photoDescription = document.getElementById('photo-description');
@@ -596,6 +381,7 @@ class StarlitApp {
         if (!photo) return;
         
         // Update content
+        if(photoImage) photoImage.src = photo.image;
         if (photoTitle) photoTitle.textContent = photo.title;
         if (photoDescription) photoDescription.textContent = photo.description;
         if (photoDate) photoDate.textContent = photo.date;
@@ -754,32 +540,6 @@ class StarlitApp {
                 top: 0,
                 behavior: 'smooth'
             });
-        }
-        
-        // Reset envelope
-        const flap = document.getElementById('envelope-flap');
-        const card = document.getElementById('greeting-card');
-        
-        if (flap) flap.classList.remove('opened');
-        if (card) {
-            card.classList.remove('pulled', 'flipped');
-            card.style.cursor = 'default';
-            gsap.set(card, { y: 0 });
-        }
-        
-        // Reset candles
-        const candles = document.querySelectorAll('.candle');
-        candles.forEach(candle => {
-            const flame = candle.querySelector('.candle-flame');
-            gsap.set(candle, { opacity: 0, y: 20 });
-            if (flame) gsap.set(flame, { opacity: 0 });
-        });
-        
-        // Reset candle button
-        const lightButton = document.getElementById('light-candles-btn');
-        if (lightButton) {
-            lightButton.disabled = false;
-            lightButton.textContent = 'Light the Candles';
         }
         
         // Reset spoiler

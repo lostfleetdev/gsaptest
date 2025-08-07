@@ -7,12 +7,10 @@
     <meta name="description" content="A magical gift card experience under the stars">
     <meta name="theme-color" content="#FFD166">
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
@@ -21,7 +19,6 @@
 </head>
 <body>
     <main class="app-container" id="app">
-        <!-- Loading Card -->
         <section class="card loading-card" id="loading-card">
             <div class="card-content">
                 <div class="star-orbit">
@@ -38,7 +35,6 @@
             </div>
         </section>
 
-        <!-- Intro Card -->
         <section class="card intro-card" id="intro-card">
             <div class="card-content">
                 <div class="shooting-star-container">
@@ -52,75 +48,45 @@
             </div>
         </section>
 
-        <!-- Constellation Cake Card -->
-        <section class="card cake-card" id="cake-card">
+        <section class="card flower-card" id="flower-card">
             <div class="card-content">
-                <h2 class="card-title">Constellation Cake</h2>
-                <div class="cake-container">
-                    <div class="cake">
-                        <div class="cake-tier tier-3"></div>
-                        <div class="cake-tier tier-2"></div>
-                        <div class="cake-tier tier-1"></div>
-                        <div class="candles-container">
-                            <div class="candle" data-candle="0">
-                                <div class="candle-body"></div>
-                                <div class="candle-flame">🔥</div>
-                            </div>
-                            <div class="candle" data-candle="1">
-                                <div class="candle-body"></div>
-                                <div class="candle-flame">🔥</div>
-                            </div>
-                            <div class="candle" data-candle="2">
-                                <div class="candle-body"></div>
-                                <div class="candle-flame">🔥</div>
-                            </div>
-                            <div class="candle" data-candle="3">
-                                <div class="candle-body"></div>
-                                <div class="candle-flame">🔥</div>
-                            </div>
-                            <div class="candle" data-candle="4">
-                                <div class="candle-body"></div>
-                                <div class="candle-flame">🔥</div>
-                            </div>
-                        </div>
-                        <div class="sparks-container"></div>
+                <h2 class="card-title">A Blooming Surprise</h2>
+                <div class="flower-container">
+                    <div class="flower">
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
                     </div>
                 </div>
-                <button class="btn-secondary light-candles-btn" id="light-candles-btn">Light the Candles</button>
+                <button class="btn-secondary bloom-btn" id="bloom-btn">Watch it Bloom</button>
             </div>
         </section>
 
-        <!-- Envelope Card -->
-        <section class="card envelope-card" id="envelope-card">
+        <section class="card flip-card-section" id="flip-card-section">
             <div class="card-content">
-                <h2 class="card-title">Special Delivery</h2>
-                <div class="envelope-container">
-                    <div class="envelope" id="envelope">
-                        <div class="envelope-flap" id="envelope-flap"></div>
-                        <div class="envelope-body"></div>
-                        <div class="greeting-card" id="greeting-card">
-                            <div class="card-front">
-                                <div class="constellation-pattern">✨ ⭐ 🌟 ✨ ⭐</div>
-                                <p>For Someone Special</p>
-                            </div>
-                            <div class="card-inside">
-                                <p class="handwritten">My dearest friend,<br><br>Under these stars tonight I wanted to share something magical with you...<br><br>Every moment we've shared shines brighter than any constellation.<br><br>With love,<br>Your friend ✨</p>
-                            </div>
+                <h2 class="card-title">A Message For You</h2>
+                <div class="flip-card" id="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <p>A special message awaits...</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p class="handwritten">May your life be as bright and beautiful as a field of blooming flowers under a starlit sky.</p>
                         </div>
                     </div>
                 </div>
-                <div class="envelope-instructions">
-                    <p>Tap the envelope flap, then drag the card out</p>
-                </div>
+                <button class="btn-primary flip-btn" id="flip-btn">Flip the Card</button>
             </div>
         </section>
 
-        <!-- Spoiler Warning Card -->
         <section class="card spoiler-card" id="spoiler-card">
             <div class="card-content">
                 <h2 class="card-title spoiler-title">✨ SPOILER AHEAD ✨</h2>
                 <div class="preview-mosaic">
-                    <div class="mosaic-tile" style="background: linear-gradient(45deg, #0D1B2A, #5F4B8B);">Mountain</div>
+                    <img src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Spoiler image" class="spoiler-image">
                 </div>
                 <button class="btn-primary reveal-btn" id="reveal-btn">
                     <span>Reveal</span>
@@ -129,7 +95,6 @@
             </div>
         </section>
 
-        <!-- Photo Album Card -->
         <section class="card album-card" id="album-card">
             <div class="card-content">
                 <h2 class="card-title">Starlit Memories</h2>
@@ -137,6 +102,7 @@
                     <div class="photo-display">
                         <div class="photo-placeholder" id="current-photo">
                             <div class="photo-content" id="photo-content">
+                                <img src="https://images.unsplash.com/photo-1483728642387-6c351b4d6788?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Starlit Mountain Peak" class="photo-image" id="photo-image">
                                 <div class="photo-gradient" id="photo-gradient"></div>
                                 <h3 class="photo-title" id="photo-title">Starlit Mountain Peak</h3>
                             </div>
@@ -160,7 +126,6 @@
             </div>
         </section>
 
-        <!-- Good Night Finale Card -->
         <section class="card finale-card" id="finale-card">
             <div class="card-content">
                 <div class="shooting-stars-loop">

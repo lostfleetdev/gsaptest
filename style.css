@@ -1036,222 +1036,104 @@ body {
   opacity: 1;
 }
 
-/* Cake Card Styles */
-.cake-card {
+/* Flower Card Styles */
+.flower-card {
   background: radial-gradient(ellipse at center bottom, rgba(95, 75, 139, 0.3) 0%, var(--starlit-night-blue) 70%);
 }
 
-.cake-container {
-  margin: var(--space-32) 0;
+.flower-container {
+    width: 200px;
+    height: 200px;
+    margin: var(--space-32) auto;
+    position: relative;
 }
 
-.cake {
-  position: relative;
-  width: 280px;
-  height: 200px;
-  margin: 0 auto;
+.flower {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: scale(0.5);
+    transition: transform 1.5s ease;
 }
 
-.cake-tier {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  background: var(--starlit-night-blue);
-  border: 2px solid var(--nebula-violet);
-  border-radius: var(--radius-lg);
-  box-shadow: inset 0 0 20px rgba(95, 75, 139, 0.5);
+.flower.bloom {
+    transform: scale(1);
 }
 
-.tier-1 {
-  width: 200px;
-  height: 60px;
-  transform: translateX(-50%);
-  background-image: radial-gradient(circle at 20% 20%, var(--star-gold) 2px, transparent 2px),
-                    radial-gradient(circle at 60% 40%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
-                    radial-gradient(circle at 80% 70%, var(--star-gold) 1px, transparent 1px);
-  background-size: 30px 30px, 25px 25px, 35px 35px;
+.petal {
+    position: absolute;
+    width: 100px;
+    height: 150px;
+    background: var(--star-gold);
+    border-radius: 50% 0;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0% 0%;
+    transition: transform 1s ease;
 }
 
-.tier-2 {
-  width: 160px;
-  height: 50px;
-  bottom: 50px;
-  transform: translateX(-50%);
-  background-image: radial-gradient(circle at 30% 30%, var(--star-gold) 2px, transparent 2px),
-                    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
-  background-size: 28px 28px, 32px 32px;
+.flower.bloom .petal {
+    transform: rotate(45deg) scaleY(1);
 }
 
-.tier-3 {
-  width: 120px;
-  height: 40px;
-  bottom: 90px;
-  transform: translateX(-50%);
-  background-image: radial-gradient(circle at 40% 50%, var(--star-gold) 2px, transparent 2px),
-                    radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
-  background-size: 26px 26px, 30px 30px;
-}
+.petal:nth-child(1) { transform: rotate(0deg); }
+.petal:nth-child(2) { transform: rotate(60deg); }
+.petal:nth-child(3) { transform: rotate(120deg); }
+.petal:nth-child(4) { transform: rotate(180deg); }
+.petal:nth-child(5) { transform: rotate(240deg); }
+.petal:nth-child(6) { transform: rotate(300deg); }
 
-.candles-container {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: var(--space-16);
-}
-
-.candle {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.candle-body {
-  width: 8px;
-  height: 30px;
-  background: linear-gradient(180deg, var(--star-gold) 0%, #E85A4F  100%);
-  border-radius: var(--radius-sm);
-}
-
-.candle-flame {
-  font-size: 14px;
-  margin-top: -5px;
-  opacity: 0;
-  animation: flicker 1s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 10px rgba(255, 100, 50, 0.8));
-}
-
-@keyframes flicker {
-  0% { transform: scale(1) rotate(-1deg); }
-  50% { transform: scale(1.1) rotate(1deg); }
-  100% { transform: scale(0.95) rotate(-0.5deg); }
-}
-
-.sparks-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-/* Envelope Card Styles */
-.envelope-card {
+/* Flip Card Styles */
+.flip-card-section {
   background: radial-gradient(ellipse at center, rgba(240, 234, 251, 0.1) 0%, var(--starlit-night-blue) 70%);
 }
 
-.envelope-container {
-  margin: var(--space-32) 0;
-  perspective: 1000px;
+.flip-card {
+    background-color: transparent;
+    width: 300px;
+    height: 200px;
+    perspective: 1000px;
+    margin: var(--space-32) auto;
+    cursor: pointer;
 }
 
-.envelope {
-  position: relative;
-  width: 280px;
-  height: 180px;
-  margin: 0 auto;
-  cursor: pointer;
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
 }
 
-.envelope-body {
-  width: 100%;
-  height: 100%;
-  background: var(--starlit-night-blue);
-  border: 2px solid var(--nebula-violet);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+.flip-card.is-flipped .flip-card-inner {
+    transform: rotateY(180deg);
 }
 
-.envelope-flap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50%;
-  background: linear-gradient(135deg, var(--starlit-night-blue) 0%, rgba(95, 75, 139, 0.8) 100%);
-  border: 2px solid var(--nebula-violet);
-  border-bottom: none;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  transform-origin: bottom center;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 3;
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: var(--radius-lg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--font-size-xl);
 }
 
-.envelope-flap.opened {
-  transform: rotateX(180deg);
+.flip-card-front {
+    background-color: var(--soft-moonlight);
+    color: var(--starlit-night-blue);
 }
 
-.greeting-card {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: calc(100% - 40px);
-  height: calc(100% - 40px);
-  background: var(--soft-moonlight);
-  color: var(--starlit-night-blue);
-  border-radius: var(--radius-base);
-  transform: translateY(0);
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: grab;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  z-index: 2;
+.flip-card-back {
+    background-color: var(--nebula-violet);
+    color: white;
+    transform: rotateY(180deg);
 }
 
-.greeting-card.pulled {
-  transform: translateY(-150px);
-}
-
-.greeting-card.flipped .card-front {
-  transform: rotateY(-180deg);
-}
-
-.greeting-card.flipped .card-inside {
-  transform: rotateY(0deg);
-}
-
-.card-front, .card-inside {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: var(--radius-base);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: var(--space-16);
-  text-align: center;
-}
-
-.card-inside {
-  transform: rotateY(180deg);
-  background: var(--soft-moonlight);
-}
-
-.constellation-pattern {
-  font-size: var(--font-size-lg);
-  margin-bottom: var(--space-16);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-.handwritten {
-  font-family: 'Courier New', monospace;
-  font-size: var(--font-size-sm);
-  line-height: 1.6;
-  color: var(--starlit-night-blue);
-}
-
-.envelope-instructions {
-  margin-top: var(--space-24);
-  color: var(--text-muted);
-  font-size: var(--font-size-sm);
-}
 
 /* Spoiler Card Styles */
 .spoiler-card {
@@ -1266,9 +1148,6 @@ body {
 }
 
 .preview-mosaic {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: var(--space-8);
   width: 200px;
   height: 200px;
   margin: 0 auto var(--space-32);
@@ -1280,14 +1159,11 @@ body {
   filter: blur(0);
 }
 
-.mosaic-tile {
-  border-radius: var(--radius-base);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-xs);
-  color: var(--text-starlight);
-  font-weight: 500;
+.spoiler-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
 }
 
 /* Album Card Styles */
@@ -1327,6 +1203,15 @@ body {
   background: var(--color-bg-1);
 }
 
+.photo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .photo-gradient {
   position: absolute;
   top: 0;
@@ -1335,6 +1220,7 @@ body {
   height: 100%;
   background: linear-gradient(135deg, #0D1B2A 0%, #2D3A52 50%, #1A2E1A 100%);
   transition: background 0.6s ease;
+  opacity: 0.5;
 }
 
 .photo-title {
